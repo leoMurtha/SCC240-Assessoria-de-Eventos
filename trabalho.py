@@ -45,18 +45,31 @@ def menu():
 
 def inserirPessoa():
     print (cx_Oracle.clientversion())
-    i = input()
-    print(i)
+    cursor = connection.cursor()
+
+    print('Insira o CPF (xxx.xxx.xxx-xx): ')
+    CPF = raw_input()
+    print('Insira o telefone: ')
+    nome = raw_input()
+    print('Insira o tipo (Noivo, Formando ou Funcionario): ')
+    tipo = raw_input()
+
+    statament = 'INSERT INTO Pessoa \
+                 VALUES(:CPF, :nome, :tipo)'
+    cursor.execute(statament, {'CPF': CPF, 'nome': nome, 'tipo': tipo})
+
+
+
+    cursor.close()
 
 
 def main():
-    print("oi")
-    menu()
+    inserirPessoa()
 
 
 if __name__ == '__main__':
     dsn = cx_Oracle.makedsn('grad.icmc.usp.br', 15215, 'orcl')
-    connection = cx_Oracle.connect(user='A9779242', password='97990906@ntonio', dsn=dsn)
+    connection = cx_Oracle.connect(user='L4182085', password='041097l$', dsn=dsn)
     main()
 
 
