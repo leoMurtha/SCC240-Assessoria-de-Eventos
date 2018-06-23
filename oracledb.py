@@ -23,26 +23,32 @@ def menu():
 		os.system('clear')
 
 		if (opcao == 1):
-			print opcao
+			print (opcao)
 
 		elif (opcao == 2):
-			print opcao
+			print (opcao)
 
 		elif (opcao == 3):
-			print opcao
+			print (opcao)
 
 		elif (opcao == 4):
-			print opcao
+			print (opcao)
 
 		elif (opcao == 5):
-			print opcao
+			print (opcao)
 
 		elif (opcao == 6):
-			print opcao
+			print (opcao)
 			exit()
 		else:
 			print('Opcao invalida. Selecione uma nova opcao.')
 			time.sleep(2)
+
+
+def get_all_rows(label, data_type='uniforme'):
+	#Querry all rows
+	cursor = connection.cursor()
+	print (cursor)
 
 
 dsn = cx_Oracle.makedsn('grad.icmc.usp.br', 15215, 'orcl')
@@ -57,35 +63,37 @@ cursor = connection.cursor()
 statament = 'select * from time'
 cursor.execute(statament)
 response = cursor.fetchall()
-print len(response)
+print (len(response))
 for i in response:
-    print i
+    print (i)
 
-
-print "\n"
+print ('-----------------------------')
 
 
 #Select 2 (Positional)
-saldo_gols = input()
+#saldo_gols = input()
+saldo_gols = 20
 cursor.execute('SELECT * \
                 FROM time \
                 WHERE estado = :1 AND saldo_gols> :2', ('SP', saldo_gols))
 for i in cursor:
-    print i
+    print (i)
 
 
-print "\n"
+print ('-----------------------------')
 
 
 #Select 3 (Named)
 cursor.execute('SELECT * \
                 FROM time \
                 WHERE estado= :estado AND saldo_gols>= :saldo', {'estado':'SP', 'saldo':20})
+#dict =  {i[0]: None for i in cursor.description}
+#print dict
 for i in cursor:
-    print i
+    print (i)
 
 
-print "\n"
+print ('---------------------------------')
 
 
 #Juntando Select 1 com 3
@@ -95,7 +103,12 @@ statament = ('SELECT * \
                 FROM time \
                 WHERE estado= :estado AND saldo_gols>= :saldo')
 cursor.execute(statament, {'estado':estado, 'saldo': saldo})
+
+dict =  {i[0]: None for i in cursor.description}
+print (dict)
+
 response = cursor.fetchall()
 print (response)
+cursor.close()
 
 connection.close()
