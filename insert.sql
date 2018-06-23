@@ -7,10 +7,10 @@ INSERT INTO LOCAL(NFANTASIA, AREA, LOTACAO, ALUGUEL, ENDERECO, TELEFONE, NPROPRI
 ------------------------------------------------------------------------------------------------------
 
 INSERT INTO EVENTO(NRO, TEMA, DATA, DESCRICAO, LOCAL, TIPO)
-    VALUES(0010, 'Classico', to_date('2018/01/29 20:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'Casamento clássico', 'Buffet Andramar', 'Casamento');
+    VALUES(1, 'Classico', to_date('2018/01/29 20:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'Casamento clássico', 'Buffet Andramar', 'Casamento');
 
 INSERT INTO EVENTO(NRO, TEMA, DATA, DESCRICAO, LOCAL, TIPO)
-    VALUES(0097, 'Anos 80', to_date('2019/02/20 19:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'Formatura oitentista', 'Buffet Demácia', 'Formatura');
+    VALUES(2, 'Anos 80', to_date('2019/02/20 19:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'Formatura oitentista', 'Buffet Demácia', 'Formatura');
 
 ------------------------------------------------------------------------------------------------------
 
