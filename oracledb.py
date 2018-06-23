@@ -104,7 +104,7 @@ statament = ('SELECT * \
                 WHERE estado= :estado AND saldo_gols>= :saldo')
 cursor.execute(statament, {'estado':estado, 'saldo': saldo})
 
-dict =  {i[0]: None for i in cursor.description}
+dict =  {i[0]: [] for i in cursor.description}
 print (dict)
 
 response = cursor.fetchall()
