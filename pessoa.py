@@ -330,11 +330,12 @@ def updatePessoa():
     
     while(True):
         CPF = readNotNullAttribute("CPF da pessoa para modificacao")
-        statement = 'SELECT * \
+        statement = 'SELECT TIPO \
                      FROM PESSOA \
                      WHERE CPF = :CPF'
         try:
-            cursor.execute(statement, {'cpf': CPF})
+            cursor.execute(statement, {'CPF': CPF})
+            response = cursor.fetchone()[0]
             break
         except cx_Oracle.IntegrityError:
                 print("Erro de restricao.")
@@ -362,11 +363,7 @@ def updatePessoa():
                 print("\t- Nome muito longo")
             except cx_Oracle.Error:
                 print(cx_Oracle.Error.message)
-
-    statement = 'SELECT TIPO FROM PESSOA WHERE CPF = :CPF'
-    cursor.execute(statement, {'CPF', CPF})
-    response = cursor.fetchone()[0]
-    
+   
     cursor.close()
     
     if(response.upper() == 'NOIVO'):
@@ -375,3 +372,88 @@ def updatePessoa():
         updateFormando(CPF)
     elif(response.upper() == 'FUNCIONARIO'):
         updateFuncionario(CPF)
+
+
+def deletePessoa():
+    cursor = connection.cursor()
+
+    while(True):
+        CPF = readNotNullAttribute("CPF a ser deletado")
+        statement = 'DELETE FROM PESSOA \
+                     WHERE CPF = :CPF'
+  
+        try:
+            cursor.execute(statement, {'CPF':CPF})
+            break
+        except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- CPF invalido")
+        except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+    
+    cursor.close()
+
+
+"""
+    - Select somente a PESSOA
+    - Select JOIN com o TIPO dela
+    - 
+"""
+def searchPessoa():
+    cursor = connection.cursor()
+
+    while(True):
+        CPF = readNotNullAttribute("CPF da pessoa para busca")
+        statement = 'SELECT TIPO FROM PESSOA WHERE CPF = :CPF'
+
+        try:
+            cursor.execute(statement, {'CPF':CPF})
+            response = cursor.fetchone()[0]  
+            break
+        except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- CPF invalido")
+        except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+
+    if(response.upper() == 'NOIVO'):
+        updateNoivo(CPF)
+    elif(response.upper() == 'FORMANDO'):
+        updateFormando(CPF)
+    elif(response.upper() == 'FUNCIONARIO'):
+        updateFuncionario(CPF)
+
+    cursor.close()
+
+def gerenciarPessoas():
+    print('[GERENCIADOR DE PESSOAS] Selecione o numero da opcao desejada:')
+    print('1) Cadastrar uma pessoa')
+    print('2) Atualizar dados de uma pessoa')
+    print('3) Remover uma pessoa')
+    print('4) Pesquisar uma pessoa')
+
+    pessoasAux = int(input())
+
+    if (pessoasAux == 1):
+        inserirPessoa()
+        connection.commit()
+        print("Cadastro completo!")
+        raw_input("Pressione qualquer tecla para continuar...")
+    elif (pessoasAux == 2):
+        updatePessoa()
+        connection.commit()
+        print("Atualizacao completa!")
+        raw_input("Pressione qualquer tecla para continuar...")
+    elif (pessoasAux == 3):
+        deletePessoa()
+        connection.commit()
+        print("Remocao completa!")
+        raw_input("Pressione qualquer tecla para continuar...")
+    elif (pessoasAux == 4):
+        searchPessoa()
+        print("Busca completa!")
+        raw_input("Pressione qualquer tecla para continuar...")
+    else:
+        print("Opcao Invalida")
