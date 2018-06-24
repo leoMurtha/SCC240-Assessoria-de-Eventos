@@ -13,8 +13,7 @@ def menu():
         print('1) Gerenciar Pessoa') # CRUD de pessoas (clientes e funcionarios)
         print('2) Gerenciar Eventos') # CRUD e todo o processo de cadastro de eventos
         print('3) Gerenciar Locais') # CRUD de Locais
-        print('4) Gerenciar Servicos') # Por semantica, soh consulta, update e delete (sem insercao, so faz sentido junto a um evento)
-        print('6) Sair')
+        print('4) Sair')
         #le a opcao desejada
         opcao = int(input())
         #limpa a tela
@@ -31,12 +30,6 @@ def menu():
             gerenciarLocal()
 
         elif (opcao == 4):
-            print (opcao)
-
-        elif (opcao == 5):
-            print (opcao)
-
-        elif (opcao == 6):
             print (opcao)
             exit()
         else:
