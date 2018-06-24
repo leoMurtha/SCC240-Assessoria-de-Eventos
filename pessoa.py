@@ -451,6 +451,7 @@ def serachNoivo(CPF):
 
     cursor.close()
 
+
 def searchPessoa():
     cursor = connection.cursor()
 
