@@ -4,45 +4,44 @@ import cx_Oracle
 
 #loop para mostrar o menu
 def menu():
-	while (True):
-		#limpa a tela toda vez que entrar no menu
-		os.system('clear')
-		#mostra as opcoes disponiveis
-		print('Selecione uma opcao:')
-		print('1) Inserir Pessoa')
-		print('2) ')
-		print('3) ')
-		print('4) ')
-		print('5) ')
-		print('6) Sair')
-		#le a opcao desejada
-		opcao = input()
-		#limpa a tela
-		os.system('clear')
+    while (True):
+        #limpa a tela toda vez que entrar no menu
+        os.system('clear')
+        #mostra as opcoes disponiveis
+        print('[MENU INICIAL] Selecione uma opcao:')
+        print('1) Gerenciar Pessoa') # CRUD de pessoas (clientes e funcionarios)
+        print('2) Gerenciar Eventos') # CRUD e todo o processo de cadastro de eventos
+        print('3) Gerenciar Locais') # CRUD de Locais
+        print('4) Gerenciar Servicos') # Por semantica, soh consulta, update e delete (sem insercao, so faz sentido junto a um evento)
+        print('6) Sair')
+        #le a opcao desejada
+        opcao = input()
+        #limpa a tela
+        os.system('clear')
 
-		if (opcao == 1):
-			inserirPessoa()
+        if (opcao == 1):
+            inserirPessoa()
 
-		elif (opcao == 2):
-			print (opcao)
+        elif (opcao == 2):
+            print (opcao)
 
-		elif (opcao == 3):
-			print (opcao)
+        elif (opcao == 3):
+            gerenciarLocal()
 
-		elif (opcao == 4):
-			print (opcao)
+        elif (opcao == 4):
+            print (opcao)
 
-		elif (opcao == 5):
-			print (opcao)
+        elif (opcao == 5):
+            print (opcao)
 
-		elif (opcao == 6):
-			print (opcao)
-			exit()
-		else:
-			print('Opcao invalida. Selecione uma nova opcao.')
-			time.sleep(2)
+        elif (opcao == 6):
+            print (opcao)
+            exit()
+        else:
+            print('Opcao invalida. Selecione uma nova opcao.')
+            time.sleep(2)
 
-
+########################################################################
 def inserirForma(formando, comissao):
     cursor = connection.cursor()
     
@@ -55,7 +54,7 @@ def inserirForma(formando, comissao):
             print("Erro de restricao.")
             print("Possiveis erros: ")
             print("\t- Formando invalido")
-            print("\t- Nome de comissao ivalido")
+            print("\t- Nome de comissao invalido")
             return False
     except cx_Oracle.Error:
             print(cx_Oracle.Error.message)
@@ -286,10 +285,92 @@ def updatePessoa():
     elif(response.upper() == 'FUNCIONARIO'):
         print(response)
 
+########################################################################
 
+def gerenciarLocal():
+    os.system('clear')
+    #mostra as opcoes disponiveis
+    print('[MENU DE LOCAIS] Selecione uma opcao:')
+    print('1) Cadastrar novo local') # CRUD de pessoas (clientes e funcionarios)
+    print('2) Consultar e Alterar locais cadastrados') # Select, update, remove
+    print('3) Voltar')
+    #le a opcao desejada
+    opcaoL = input()
+    #limpa a tela
+    os.system('clear')
+
+    if(opcaoL == 1):
+        cadastrarLocal()
+
+    elif(opcaoL == 2):
+        menu()
+
+    elif(opcaoL == 3):
+        menu()   
+
+    else:
+        print('Opcao invalida. Selecione uma nova opcao.')      
+
+def cadastrarLocal():
+        os.system('clear')
+        #mostra as opcoes disponiveis
+        print('[CADASTRO DE LOCAL] Preencha os valores abaixo:')
+
+        nFant = readNotNullAttribute('Nome Fantasia')
+        area  = readNotNullAttribute('Area em metros quadrados')
+        lot   = readAttribute('Lotacao')
+        alug  = readNotNullAttribute('Aluguel')
+        end   = readNotNullAttribute('Endereco')
+        tel   = readAttribute('Telefone')
+        nProp = readNotNullAttribute('Nome Proprietario')
+
+        inserirLocal(nFant,area,lot,alug,end,tel,nProp)
+
+        print("Local Cadastrado com Sucesso!")
+
+def inserirLocal(nomeFantasia,area,lotacao,aluguel,endereco,telefone,nomeProprietario):
+    cursor = connection.cursor()
+    
+    statement = 'INSERT INTO LOCAL \
+                 VALUES(:nFant, :area, :lot, :alug, :end, :tel, :nProp)'
+    
+    try:
+        cursor.execute(statement, {'nFant' : nomeFantasia, 'area' : area, 'lot' : lotacao, 'alug' : aluguel, 'end' : endereco, 'tel' : telefone, 'nProp' : nomeProprietario})
+    
+    except cx_Oracle.IntegrityError:
+            print("Erro de restricao.")
+            print("Possiveis erros: ")
+            print("\t- nomeFantasia invalido ou ja existente")
+            print("\t- Valores de outros atributos invalidos")
+            return False
+    except cx_Oracle.Error:
+            print(cx_Oracle.Error.message)
+            return False
+    
+    cursor.close()
+    return True    
+
+def readNotNullAttribute(varName):
+        notCompleted = True
+        while(notCompleted):
+            print('Informe '+varName+' (NAO PODE SER NULO):')
+            varValue = raw_input()
+            if varValue is None:
+                notCompleted = True
+            else:
+                return varValue
+     
+        
+
+def readAttribute(varName):
+        print('Informe '+varName+' :')
+        varValue = raw_input()
+        return varValue
+
+########################################################################
 
 def main():
-    inserirPessoa()
+    menu()
     connection.commit()
 
 
