@@ -20,7 +20,7 @@ def menu():
         #limpa a tela
         os.system('clear')
 
-        if (opcao == 1): # GERENCIADOR DE PESSOAS
+        if (opcao == 1):
             gerenciarPessoas()
 
         elif (opcao == 2):

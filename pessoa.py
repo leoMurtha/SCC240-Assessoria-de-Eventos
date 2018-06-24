@@ -398,7 +398,7 @@ def deletePessoa():
 def searchFuncionario(CPF):
     cursor = connection.cursor()
     
-    print("A pessoa buscada é um FUNCIONARIO, segue as informacoes: ")
+    print("A pessoa buscada e um FUNCIONARIO, segue as informacoes: ")
 
     statement = 'SELECT CPF, NOME, CARGO, ENDERECO, CT, SALARIO, SERVICO  \
                  FROM PESSOA \
@@ -417,7 +417,7 @@ def searchFuncionario(CPF):
 def searchFormando(CPF):
     cursor = connection.cursor()
     
-    print("A pessoa buscada é um FORMANDO, segue as informacoes: ")
+    print("A pessoa buscada e um FORMANDO, segue as informacoes: ")
 
     statement = 'SELECT CPF, NOME, CURSO, INSTITUICAO \
                  FROM PESSOA \
@@ -436,7 +436,7 @@ def searchFormando(CPF):
 def serachNoivo(CPF):
     cursor = connection.cursor()
     
-    print("A pessoa buscada é um NOIVO, segue as informacoes: ")
+    print("A pessoa buscada e um NOIVO, segue as informacoes: ")
 
     statement = 'SELECT CPF, NOME, TELEFONE \
                  FROM PESSOA \
