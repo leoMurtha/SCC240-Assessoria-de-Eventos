@@ -2,47 +2,6 @@ import os
 import time
 import cx_Oracle
 
-#loop para mostrar o menu
-def menu():
-	while (True):
-		#limpa a tela toda vez que entrar no menu
-		os.system('clear')
-		#mostra as opcoes disponiveis
-		print('Selecione uma opcao:')
-		print('1) Inserir Pessoa')
-		print('2) ')
-		print('3) ')
-		print('4) ')
-		print('5) ')
-		print('6) Sair')
-		#le a opcao desejada
-		opcao = input()
-		#limpa a tela
-		os.system('clear')
-
-		if (opcao == 1):
-			inserirPessoa()
-
-		elif (opcao == 2):
-			print (opcao)
-
-		elif (opcao == 3):
-			print (opcao)
-
-		elif (opcao == 4):
-			print (opcao)
-
-		elif (opcao == 5):
-			print (opcao)
-
-		elif (opcao == 6):
-			print (opcao)
-			exit()
-		else:
-			print('Opcao invalida. Selecione uma nova opcao.')
-			time.sleep(2)
-
-
 def inserirForma(formando, comissao):
     cursor = connection.cursor()
     
@@ -155,8 +114,8 @@ def inserirFuncionario(CPF):
         cargo = raw_input("Digite o cargo: ")
         end = raw_input("Digite o endereco: ")
         ct = raw_input("Digite o numero da carteira de trabalho: ")
-        salario = raw_input("Digite o salario: ")
-        ord_serv = raw_input("Digite a ordem de servico: ")
+        salario = input("Digite o salario: ")
+        ord_serv = input("Digite a ordem de servico: ")
 
         statement = 'INSERT INTO FUNCIONARIO(CPF, CARGO, ENDERECO, CT, SALARIO, ORDEM_SERVICO) \
                      VALUES(:CPF, :cargo, :end, :ct, :salario, :ord_serv)'
@@ -169,7 +128,7 @@ def inserirFuncionario(CPF):
             print("Possiveis erros: ")
             print("\t- Cargo ou Endereco muito longo")
             print("\t- Carteira de trabalho invalida")
-            print("\t- Servic invalido invalido")
+            print("\t- Ordem de servico invalido")
         except cx_Oracle.Error:
             print(cx_Oracle.Error.message)
 
@@ -209,6 +168,7 @@ def inserirPessoa():
     
     return CPF
 
+
 def updateNoivo(CPF):
     cursor = connection.cursor()
 
@@ -232,6 +192,140 @@ def updateNoivo(CPF):
             except cx_Oracle.Error:
                 print(cx_Oracle.Error.message)
         
+    cursor.close()
+
+
+def updateFormando(CPF):
+    cursor = connection.cursor()
+
+    resp = raw_input("Deseja alterar o curso? (Se sim, digite: S)")
+    if(resp.upper() == 'S'):
+
+        while(True):
+            curso = raw_input("Digite o novo curso: ")
+
+            statement = 'UPDATE FORMANDO \
+                         SET CURSO = :curso \
+                         WHERE CPF = :CPF'
+
+            try:
+                cursor.execute(statement, {'curso':curso, 'CPF':CPF})
+                break
+            except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- Curso muito longo")
+            except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+    
+
+    resp = raw_input("Deseja alterar a instituicao? (Se sim, digite: S)")
+    if(resp.upper() == 'S'):
+
+        while(True):
+            inst = raw_input("Digite a nova instituicao: ")
+
+            statement = 'UPDATE FORMANDO \
+                         SET INSTITUICAO = :inst \
+                         WHERE CPF = :CPF'
+
+            try:
+                cursor.execute(statement, {'inst':inst, 'CPF':CPF})
+                break
+            except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- Instituicao muito longa")
+            except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+        
+    cursor.close()
+
+
+def updateFuncionario(CPF):
+    cursor = connection.cursor()
+
+    resp = raw_input("Deseja alterar o cargo? (Se sim, digite: S)")
+    if(resp.upper() == 'S'):
+
+        while(True):
+            cargo = raw_input("Digite o novo cargo: ")
+
+            statement = 'UPDATE FUNCIONARIO \
+                         SET CARGO = :cargo \
+                         WHERE CPF = :CPF'
+
+            try:
+                cursor.execute(statement, {'cargo':cargo, 'CPF':CPF})
+                break
+            except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- Cargo muito longo")
+            except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+    
+    resp = raw_input("Deseja alterar o endereco? (Se sim, digite: S)")
+    if(resp.upper() == 'S'):
+
+        while(True):
+            end = raw_input("Digite o novo endereco: ")
+
+            statement = 'UPDATE FUNCIONARIO \
+                         SET ENDERECO = :end \
+                         WHERE CPF = :CPF'
+
+            try:
+                cursor.execute(statement, {'end':end, 'CPF':CPF})
+                break
+            except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- Endereco muito longo")
+            except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+    
+    resp = raw_input("Deseja alterar a carteira de trabalho? (Se sim, digite: S)")
+    if(resp.upper() == 'S'):
+
+        while(True):
+            ct = raw_input("Digite a nova carteira de trabalho: ")
+
+            statement = 'UPDATE FUNCIONARIO \
+                         SET CT = :ct \
+                         WHERE CPF = :CPF'
+
+            try:
+                cursor.execute(statement, {'ct':ct, 'CPF':CPF})
+                break
+            except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- Carteira de trabalho invalida")
+            except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+
+    resp = raw_input("Deseja alterar o salario? (Se sim, digite: S)")
+    if(resp.upper() == 'S'):
+
+        while(True):
+            salario = raw_input("Digite o novo salario: ")
+
+            statement = 'UPDATE FUNCIONARIO \
+                         SET SALARIO = :salario \
+                         WHERE CPF = :CPF'
+
+            try:
+                cursor.execute(statement, {'salario':salario, 'CPF':CPF})
+                break
+            except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- Carteira de trabalho invalida")
+            except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+    
+
     cursor.close()
 
 
@@ -280,12 +374,11 @@ def updatePessoa():
     cursor.close()
     
     if(response.upper() == 'NOIVO'):
-        updatePessoa()
+        updateNoivo(CPF)
     elif(response.upper() == 'FORMANDO'):
-        print(response)
+        updateFormando(CPF)
     elif(response.upper() == 'FUNCIONARIO'):
-        print(response)
-
+        updateFuncionario(CPF)
 
 
 def main():
@@ -297,8 +390,16 @@ if __name__ == '__main__':
     dsn = cx_Oracle.makedsn('grad.icmc.usp.br', 15215, 'orcl')
     connection = cx_Oracle.connect(user='L4182085', password='041097l$', dsn=dsn)
     
-    main()
+    #main()
+
+    c = raw_input()
+    print type(c)
+    print c
     
+    d = int(c)
+    print type(d)
+    print d
+
     connection.close()
 
 

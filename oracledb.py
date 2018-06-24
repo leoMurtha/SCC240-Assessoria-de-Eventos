@@ -4,47 +4,6 @@ import time
 import cx_Oracle
 
 
-#loop para mostrar o menu
-def menu():
-	while (True):
-		#limpa a tela toda vez que entrar no menu
-		os.system('clear')
-		#mostra as opcoes disponiveis
-		print('Selecione uma opcao:')
-		print('1) ')
-		print('2) ')
-		print('3) ')
-		print('4) ')
-		print('5) ')
-		print('6) Sair')
-		#le a opcao desejada
-		opcao = input()
-		#limpa a tela
-		os.system('clear')
-
-		if (opcao == 1):
-			print (opcao)
-
-		elif (opcao == 2):
-			print (opcao)
-
-		elif (opcao == 3):
-			print (opcao)
-
-		elif (opcao == 4):
-			print (opcao)
-
-		elif (opcao == 5):
-			print (opcao)
-
-		elif (opcao == 6):
-			print (opcao)
-			exit()
-		else:
-			print('Opcao invalida. Selecione uma nova opcao.')
-			time.sleep(2)
-
-
 def get_all_rows(label, data_type='uniforme'):
 	#Querry all rows
 	cursor = connection.cursor()
