@@ -36,8 +36,6 @@ def selecionarLocal(data):
     responses = cursor.fetchall()
     print('Locais disponiveis')
     print('Nome, Locao e Aluguel')
-    for res in responses:
-        print(res)
     
     local = raw_input('Selecione o local\n')
     print(local)

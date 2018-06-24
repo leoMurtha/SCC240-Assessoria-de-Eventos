@@ -23,7 +23,7 @@ def inserirColacao():
             cursor.execute(statament_colacao, {'nro':nro, 'tema':tema, 'data':data, 'descricao':descricao, 'local':local, 'tipo':tipo})    
             cursor.close()
             connection.commit()
-            break
+            return nro
         except (cx_Oracle.IntegrityError):
             print('Erro de restricao: con')
         except cx_Oracle.Error:
@@ -52,7 +52,7 @@ def inserirFestaFormatura():
             cursor.execute(statament_formatura, {'nro':nro, 'tema':tema, 'data':data, 'descricao':descricao, 'local':local, 'tipo':tipo})    
             cursor.close()
             connection.commit()
-            break
+            return nro
         except (cx_Oracle.IntegrityError):
             print('Nro de evento ja existe ou local nao existe')
         except cx_Oracle.Error:
@@ -78,28 +78,42 @@ def acharComissao(nome):
             return True
 
 def inserirFormatura(festa, comissao, colacao):
-    pass
+    cursor = connection.cursor()
+    
+    statament_formatura = "INSERT INTO FORMATURA (COMISSAO, FESTA, COLACAO)\
+                VALUES(:comissao, :festa, :colacao)"
+
+    try:
+        cursor = connection.cursor()
+        cursor.execute(statament_formatura, {'comissao': comissao, 'festa': festa, 'colacao': colacao})    
+        cursor.close()
+        connection.commit()
+    except (cx_Oracle.IntegrityError):
+        print('Erro de restricao, possiveis erros:\n-Comissao invalida\n-Festa invalida')
+    except cx_Oracle.Error:
+        print(cx_Oracle.Error.message)
 
 def cadastrarEvento():
     print (cx_Oracle.clientversion())
     cursor = connection.cursor()
     if(raw_input('Deseja registrar um novo evento? (s/n)\n') == 's'):
         if(raw_input('Evento sera uma formatura ou casamento? (f/c)\n') == 'f'):
-                inserirFestaFormatura()
-                c = input('Deseja criar uma nova comissao para a formatura (1) ou associa-la a uma existente (2)?: (Digite: 1 ou 2): ')
-                if(c == 1):
-                    nome = inserirComissao()
-                elif (c == 2):
-                    nome = raw_input('Insira o nome da comissao existente: ')
-                    while acharComissao(nome): 
-                        nome = raw_input('Formatura nao foi encontrada, digite novamente: ')
-                    print('Comissao encontrada associando-a com a formatura')
-                if(raw_input('A formatura tera colacao? (s/n)\n') == 's'):
-                    pass
-                    # PEGAR A COLACAO PRA LINKAR COM FORMATURA
-                    #colacao = inserirColacao()
-
+            festa = inserirFestaFormatura()
+            c = input('Deseja criar uma nova comissao para a formatura (1) ou associa-la a uma existente (2)?: (Digite: 1 ou 2): ')
+            if(c == 1):
+                comissao = inserirComissao()
+            elif (c == 2):
+                comissao = raw_input('Insira o nome da comissao existente: ')
+                while acharComissao(comissao): 
+                    comissao = raw_input('Formatura nao foi encontrada, digite novamente: ')
+                print('Comissao encontrada associando-a com a formatura')
             
+            if(raw_input('A formatura tera colacao? (s/n)\n') == 's'):
+                colacao = inserirColacao()
+            else:
+                colacao = 'NULL'
+            
+            inserirFormatura(festa, comissao, colacao)
 
         raw_input('Pressione enter para voltar ao menu')
             
