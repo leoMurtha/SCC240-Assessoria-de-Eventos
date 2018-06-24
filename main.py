@@ -24,7 +24,7 @@ def menu():
             inserirPessoa()
 
         elif (opcao == 2):
-            cadastrarEvento()
+            gerenciarEvento()
             print (opcao)
 
         elif (opcao == 3):
