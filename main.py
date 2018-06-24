@@ -1,7 +1,7 @@
 import os
 import time
 import cx_Oracle
-from crud import * # MUDAR SO PARA PUXAR AS FUNCOES QUE USA MESMO
+from evento import *
 
 #loop para mostrar o menu
 def menu():
@@ -9,25 +9,26 @@ def menu():
         #limpa a tela toda vez que entrar no menu
         os.system('clear')
         #mostra as opcoes disponiveis
-        print('Selecione uma opcao:')
-        print('1) Inserir Pessoa')
-        print('2) Registrar Evento')
-        print('3) ')
-        print('4) ')
-        print('5) ')
+        print('[MENU INICIAL] Selecione o numero da opcao desejada:')
+        print('1) Gerenciar Pessoa') # CRUD de pessoas (clientes e funcionarios)
+        print('2) Gerenciar Eventos') # CRUD e todo o processo de cadastro de eventos
+        print('3) Gerenciar Locais') # CRUD de Locais
+        print('4) Gerenciar Servicos') # Por semantica, soh consulta, update e delete (sem insercao, so faz sentido junto a um evento)
         print('6) Sair')
         #le a opcao desejada
-        opcao = input()
+        opcao = int(input())
         #limpa a tela
         os.system('clear')
 
         if (opcao == 1):
             inserirPessoa()
+
         elif (opcao == 2):
             cadastrarEvento()
+            print (opcao)
 
         elif (opcao == 3):
-            print (opcao)
+            gerenciarLocal()
 
         elif (opcao == 4):
             print (opcao)
