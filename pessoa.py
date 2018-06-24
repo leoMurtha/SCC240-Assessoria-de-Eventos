@@ -52,10 +52,10 @@ def inserirNoivo(CPF):
     cursor = connection.cursor()
     
     while(True):
-        tel = raw_input("Digite o telefone: ")
+        tel = readAttribute("telefone")
 
         statement = 'INSERT INTO NOIVO(CPF, TELEFONE) \
-                 VALUES(:CPF, :tel)'
+                     VALUES(:CPF, :tel)'
         try:
             cursor.execute(statement, {'tel': tel, 'CPF': CPF})
             break
@@ -73,8 +73,8 @@ def inserirFormando(CPF):
     cursor = connection.cursor()
     
     while(True):
-        curso = raw_input("Digite o curso: ")
-        inst = raw_input("Digite a insituicao: ")
+        curso = readAttribute("curso")
+        inst = readAttribute("instituicao")
 
         statement = 'INSERT INTO FORMANDO(CPF, CURSO, INSTITUICAO) \
                      VALUES(:CPF, :curso, :inst)'
@@ -84,9 +84,7 @@ def inserirFormando(CPF):
         except cx_Oracle.IntegrityError:
             print("Erro de restricao.")
             print("Possiveis erros: ")
-            print("\t- Cargo ou Endereco muito longo")
-            print("\t- Carteira de trabalho invalida")
-            print("\t- Servicp invalido invalido")
+            print("\t- Curso ou Instituicao muito longos")
         except cx_Oracle.Error:
             print(cx_Oracle.Error.message)
 
@@ -101,7 +99,7 @@ def inserirFormando(CPF):
         elif(c == 2):
             aux = False
             while(not aux):
-                nome = raw_input("Digite o nome da comissao: ")
+                nome = readAttribute("comissao")
                 aux = inserirForma(CPF, nome)
 
 
@@ -109,11 +107,11 @@ def inserirFuncionario(CPF):
     cursor = connection.cursor()
     
     while(True):
-        cargo = raw_input("Digite o cargo: ")
-        end = raw_input("Digite o endereco: ")
-        ct = raw_input("Digite o numero da carteira de trabalho: ")
-        salario = input("Digite o salario: ")
-        ord_serv = input("Digite a ordem de servico: ")
+        cargo = readAttribute("cargo")
+        end = readAttribute("endereco")
+        ct = readAttribute("carteira de trabalho (xxx.xxxxx.xx-x")
+        salario = float(readAttribute("salario"))
+        ord_serv = int(readAttribute("ordem de servico"))
 
         statement = 'INSERT INTO FUNCIONARIO(CPF, CARGO, ENDERECO, CT, SALARIO, ORDEM_SERVICO) \
                      VALUES(:CPF, :cargo, :end, :ct, :salario, :ord_serv)'
@@ -137,9 +135,9 @@ def inserirPessoa():
     cursor = connection.cursor()
 
     while(True):
-        CPF = raw_input("Insira o CPF (xxx.xxx.xxx-xx): ")
-        nome = raw_input("Insira o nome: ")
-        tipo = raw_input("Insira o tipo (Noivo, Formando ou Funcionario): ")
+        CPF = readNotNullAttribute("CPF (xxx.xxx.xxx-xx): ")
+        nome = readAttribute("nome")
+        tipo = readAttribute("tipo (Noivo, Formando ou Funcionario)")
 
         statement = 'INSERT INTO PESSOA(CPF, NOME, TIPO) \
                      VALUES(:CPF, :nome, :tipo)'
@@ -174,7 +172,7 @@ def updateNoivo(CPF):
     if(resp.upper() == 'S'):
 
         while(True):
-            tel = raw_input("Digite o novo telefone: ")
+            tel = readAttribute("telefone")
 
             statement = 'UPDATE NOIVO \
                          SET TELEFONE = :tel \
@@ -200,7 +198,7 @@ def updateFormando(CPF):
     if(resp.upper() == 'S'):
 
         while(True):
-            curso = raw_input("Digite o novo curso: ")
+            curso = readAttribute("curso")
 
             statement = 'UPDATE FORMANDO \
                          SET CURSO = :curso \
@@ -221,7 +219,7 @@ def updateFormando(CPF):
     if(resp.upper() == 'S'):
 
         while(True):
-            inst = raw_input("Digite a nova instituicao: ")
+            inst = readAttribute("instituicao")
 
             statement = 'UPDATE FORMANDO \
                          SET INSTITUICAO = :inst \
@@ -247,7 +245,7 @@ def updateFuncionario(CPF):
     if(resp.upper() == 'S'):
 
         while(True):
-            cargo = raw_input("Digite o novo cargo: ")
+            cargo = readAttribute("cargo")
 
             statement = 'UPDATE FUNCIONARIO \
                          SET CARGO = :cargo \
@@ -267,7 +265,7 @@ def updateFuncionario(CPF):
     if(resp.upper() == 'S'):
 
         while(True):
-            end = raw_input("Digite o novo endereco: ")
+            end = readAttribute("endereco")
 
             statement = 'UPDATE FUNCIONARIO \
                          SET ENDERECO = :end \
@@ -287,7 +285,7 @@ def updateFuncionario(CPF):
     if(resp.upper() == 'S'):
 
         while(True):
-            ct = raw_input("Digite a nova carteira de trabalho: ")
+            ct = readAttribute("carteira de trabalho")
 
             statement = 'UPDATE FUNCIONARIO \
                          SET CT = :ct \
@@ -307,7 +305,7 @@ def updateFuncionario(CPF):
     if(resp.upper() == 'S'):
 
         while(True):
-            salario = raw_input("Digite o novo salario: ")
+            salario = readAttribute("salario")
 
             statement = 'UPDATE FUNCIONARIO \
                          SET SALARIO = :salario \
@@ -331,7 +329,7 @@ def updatePessoa():
     cursor = connection.cursor()
     
     while(True):
-        CPF = raw_input("Digite o CPF a ser modificado: ")
+        CPF = readNotNullAttribute("CPF da pessoa para modificacao")
         statement = 'SELECT * \
                      FROM PESSOA \
                      WHERE CPF = :CPF'
@@ -349,7 +347,7 @@ def updatePessoa():
     if(resp.upper() == 'S'):
 
         while(True):
-            nome = raw_input("Digite o novo nome: ")
+            nome = readAttribute("nome")
 
             statement = 'UPDATE PESSOA \
                          SET NOME = :nome \

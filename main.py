@@ -21,6 +21,31 @@ def menu():
         os.system('clear')
 
         if (opcao == 1):
+            print('[GERENCIADOR DE PESSOAS] Selecione o numero da opcao desejada:')
+            print('1) Cadastrar uma pessoa')
+            print('2) Atualizar dados de uma pessoa')
+            print('3) Deletar uma pessoa')
+            print('4) Pesquisar uma pessoa')
+
+            opcao = int(input())
+
+            if (opcao == 1):
+                inserirPessoa()
+                connection.commit()
+                print("Cadastro completo!")
+                raw_input("Pressione qualquer tecla para continuar...")        
+            elif (opcao == 2):
+                updatePessoa()
+                connection.commit()
+                print("Atualizacao completa!")
+                raw_input("Pressione qualquer tecla para continuar...")        
+            elif (opcao == 3):
+                print("oi")
+            elif (opcao == 4):
+                print("oi")
+            else:
+                print("Opcao Invalida")
+
             inserirPessoa()
 
         elif (opcao == 2):
