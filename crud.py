@@ -2,44 +2,9 @@ import os
 import time
 import cx_Oracle
 
-#loop para mostrar o menu
-def menu():
-    while (True):
-        #limpa a tela toda vez que entrar no menu
-        os.system('clear')
-        #mostra as opcoes disponiveis
-        print('Selecione uma opcao:')
-        print('1) Inserir Pessoa')
-        print('2) Registrar Evento')
-        print('3) ')
-        print('4) ')
-        print('5) ')
-        print('6) Sair')
-        #le a opcao desejada
-        opcao = input()
-        #limpa a tela
-        os.system('clear')
-
-        if (opcao == 1):
-            inserirPessoa()
-        elif (opcao == 2):
-            cadastrarEvento()
-
-        elif (opcao == 3):
-            print (opcao)
-
-        elif (opcao == 4):
-            print (opcao)
-
-        elif (opcao == 5):
-            print (opcao)
-
-        elif (opcao == 6):
-            print (opcao)
-            exit()
-        else:
-            print('Opcao invalida. Selecione uma nova opcao.')
-            time.sleep(2)
+dsn = cx_Oracle.makedsn('grad.icmc.usp.br', 15215, 'orcl')
+connection = cx_Oracle.connect(user='L4182085', password='041097l$', dsn=dsn)
+   
 
 def selecionarLocal(data):
     """
@@ -67,9 +32,11 @@ def selecionarLocal(data):
 def inserirColacao():
     while True:
         print('Insira informacoes a respeito da colacao')
-        nro = _NRO
-        print(nro)
-        tema = raw_input('Insira o tema:\n')
+        cursor = connection.cursor()
+        # Gerando o id do evento
+        cursor.execute('select COUNT(NRO) from EVENTO')
+        nro = cursor.fetchone()[0] + 1
+        tema = raw_input('Insira o tema da colacao:\n')
         descricao = raw_input('Insira a descricao:\n')
         data = raw_input('Insira a data (yyyy/mm/dd):\n')
         local = selecionarLocal(data)
@@ -80,7 +47,6 @@ def inserirColacao():
                     VALUES(:nro, :tema, to_date(:data, 'yyyy/mm/dd'), :descricao, :local, :tipo)"
         
         try:
-            cursor = connection.cursor()
             cursor.execute(statament_colacao, {'nro':nro, 'tema':tema, 'data':data, 'descricao':descricao, 'local':local, 'tipo':tipo})    
             cursor.close()
             connection.commit()
@@ -93,8 +59,11 @@ def inserirColacao():
 def inserirFestaFormatura():
     while True:
         print('Insira informacoes a respeito da festa de formatura')
-        nro = _NRO
-        print(nro)
+        cursor = connection.cursor()
+        # Gerando o id do evento
+        cursor.execute('select COUNT(NRO) from EVENTO')
+        nro = cursor.fetchone()[0] + 1
+        
         tema = raw_input('Insira o tema:\n')
         descricao = raw_input('Insira a descricao:\n')
         data = raw_input('Insira a data (yyyy/mm/dd):\n')
@@ -115,15 +84,46 @@ def inserirFestaFormatura():
             print('Nro de evento ja existe ou local nao existe')
         except cx_Oracle.Error:
             print(cx_Oracle.Error.message)
-      
+
+def acharComissao(nome):
+    statament = "SELECT C.NOME FROM COMISSAO C WHERE UPPER(NOME) = UPPER(:nome)"
+
+    try:
+        cursor = connection.cursor()
+        cursor.execute(statament, {'nome':nome})
+    except cx_Oracle.Error:
+        print(cx_Oracle.Error.message)
+        cursor.close()
+        return True
+    
+    for res in cursor.fetchone():
+        if res:
+            cursor.close()
+            return False
+        else:
+            cursor.close()
+            return True
+
+def inserirFormatura(festa, comissao, colacao):
+    pass
+
 def cadastrarEvento():
     print (cx_Oracle.clientversion())
     cursor = connection.cursor()
     if(raw_input('Deseja registrar um novo evento? (s/n)\n') == 's'):
         if(raw_input('Evento sera uma formatura ou casamento? (f/c)\n') == 'f'):
                 inserirFestaFormatura()
+                c = input('Deseja criar uma nova comissao para a formatura (1) ou associa-la a uma existente (2)?: (Digite: 1 ou 2): ')
+                if(c == 1):
+                    nome = inserirComissao()
+                elif (c == 2):
+                    nome = raw_input('Insira o nome da comissao existente: ')
+                    while acharComissao(nome): 
+                        nome = raw_input('Formatura nao foi encontrada, digite novamente: ')
+                    print('Comissao encontrada associando-a com a formatura')
                 if(raw_input('A formatura tera colacao? (s/n)\n') == 's'):
-                    inserirColacao()
+                    # PEGAR A COLACAO PRA LINKAR COM FORMATURA
+                    colacao = inserirColacao()
 
             
 
@@ -164,6 +164,8 @@ def inserirComissao():
                      VALUES(:nome, :tel, :email)'
         try:
             cursor.execute(statement, {'nome': nome, 'tel': tel, 'email': email})
+            connection.commit()
+            break
         except cx_Oracle.IntegrityError:
             print("Erro de restricao.")
             print("Possiveis erros: ")
@@ -174,7 +176,6 @@ def inserirComissao():
             print(cx_Oracle.Error.message)
 
     cursor.close()
-
     return nome
 
 def inserirNoivo(CPF):
@@ -222,7 +223,7 @@ def inserirFormando(CPF):
 
     c = raw_input('Deseja associar o formando a uma comissao?: (Digite: Sim)')
     if(c.upper()=='SIM'):
-        c = input('Deseja criar uma nova comissao (1) ou assiar a uma existente (2)?: (Digite: 1 ou 2)')
+        c = input('Deseja criar uma nova comissao (1) ou associar a uma existente (2)?: (Digite: 1 ou 2)')
         if(c == 1):
             nome = inserirComissao()
             inserirForma(CPF, nome)
@@ -367,18 +368,3 @@ def updatePessoa():
         print(response)
     elif(response.upper() == 'FUNCIONARIO'):
         print(response)
-
-def main():
-    inserirPessoa()
-    connection.commit()
-
-
-if __name__ == '__main__':
-    dsn = cx_Oracle.makedsn('grad.icmc.usp.br', 15215, 'orcl')
-    connection = cx_Oracle.connect(user='L4182085', password='041097l$', dsn=dsn)
-    # Pegando numero de eventos para gerar os ids do evento
-    cursor = connection.cursor()
-    cursor.execute('select COUNT(NRO) from EVENTO')
-    _NRO = cursor.fetchone()[0] + 1
-    cursor.close()
-    main()
