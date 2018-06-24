@@ -21,7 +21,7 @@ def menu():
         os.system('clear')
 
         if (opcao == 1):
-            inserirPessoa()
+            gerenciarPessoas()
 
         elif (opcao == 2):
             gerenciarEvento()

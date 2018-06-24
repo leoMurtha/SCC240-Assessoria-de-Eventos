@@ -17,4 +17,6 @@ def readNotNullAttribute(varName):
 def readAttribute(varName):
         print('Informe '+varName+' :')
         varValue = raw_input()
+        if varValue.strip():
+                varValue = 'NULL'
         return varValue
