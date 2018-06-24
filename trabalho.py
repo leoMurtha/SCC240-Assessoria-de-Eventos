@@ -42,7 +42,6 @@ def menu():
             print('Opcao invalida. Selecione uma nova opcao.')
             time.sleep(2)
 
-########################################################################
 def inserirForma(formando, comissao):
     cursor = connection.cursor()
     

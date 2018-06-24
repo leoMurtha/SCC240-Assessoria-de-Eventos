@@ -107,13 +107,17 @@ def consultasLocal():
         ConsultarDisponiveis()
 
 
-def ConsultarLocal:
-
+def ConsultarLocal():
+    print('Insira o nome do lugar a ser consultado:')
 def ConsultarAluguel:
+    print('Insira o nome do lugar a ser consultado:')
 
-def ConsultarLotacao:
+def ConsultarLotacao():
+    print('Insira o nome do lugar a ser consultado:')
 
-def ConsultarAluguelLotacao:
+def ConsultarAluguelLotacao():
+    print('Insira o nome do lugar a ser consultado:')
 
-def ConsultarDisponiveis:
+def ConsultarDisponiveis():
+    print('Insira o nome do lugar a ser consultado:')
  
