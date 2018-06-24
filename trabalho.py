@@ -48,21 +48,43 @@ def inserirForma(formando, comissao):
     
     statement = 'INSERT INTO FORMA(FORMANDO, COMISSAO) \
                  VALUES(:cpf, :comissao)'
-    cursor.execute(statement, {'cpf': formando, 'comissao': comissao})
-
+    
+    try:
+        cursor.execute(statement, {'cpf': formando, 'comissao': comissao})
+    except cx_Oracle.IntegrityError:
+            print("Erro de restricao.")
+            print("Possiveis erros: ")
+            print("\t- Formando invalido")
+            print("\t- Nome de comissao ivalido")
+            return False
+    except cx_Oracle.Error:
+            print(cx_Oracle.Error.message)
+            return False
+    
     cursor.close()
+    return True
 
 
 def inserirComissao():
     cursor = connection.cursor()
     
-    nome = raw_input("Digite o nome: ")
-    tel = raw_input("Digite o telefone: ")
-    email = raw_input("Digite o e-mail: ")
+    while(True):
+        nome = raw_input("Digite o nome: ")
+        tel = raw_input("Digite o telefone: ")
+        email = raw_input("Digite o e-mail: ")
 
-    statement = 'INSERT INTO COMISSAO(NOME, TELEFONE, EMAIL) \
-                 VALUES(:nome, :tel, :email)'
-    cursor.execute(statement, {'nome': nome, 'tel': tel, 'email': email})
+        statement = 'INSERT INTO COMISSAO(NOME, TELEFONE, EMAIL) \
+                     VALUES(:nome, :tel, :email)'
+        try:
+            cursor.execute(statement, {'nome': nome, 'tel': tel, 'email': email})
+        except cx_Oracle.IntegrityError:
+            print("Erro de restricao.")
+            print("Possiveis erros: ")
+            print("\t- Nome muito longo")
+            print("\t- Telefone invalido")
+            print("\t- E-mail invalido")
+        except cx_Oracle.Error:
+            print(cx_Oracle.Error.message)
 
     cursor.close()
 
@@ -72,11 +94,20 @@ def inserirComissao():
 def inserirNoivo(CPF):
     cursor = connection.cursor()
     
-    tel = raw_input("Digite o telefone: ")
+    while(True):
+        tel = raw_input("Digite o telefone: ")
 
-    statement = 'INSERT INTO NOIVO(CPF, TELEFONE) \
+        statement = 'INSERT INTO NOIVO(CPF, TELEFONE) \
                  VALUES(:CPF, :tel)'
-    cursor.execute(statement, {'tel': tel, 'CPF': CPF})
+        try:
+            cursor.execute(statement, {'tel': tel, 'CPF': CPF})
+            break
+        except cx_Oracle.IntegrityError:
+            print("Erro de restricao.")
+            print("Possiveis erros: ")
+            print("\t- Telefone invalido")
+        except cx_Oracle.Error:
+            print(cx_Oracle.Error.message)
 
     cursor.close()
 
@@ -84,12 +115,23 @@ def inserirNoivo(CPF):
 def inserirFormando(CPF):
     cursor = connection.cursor()
     
-    curso = raw_input("Digite o curso: ")
-    inst = raw_input("Digite a insituicao: ")
+    while(True):
+        curso = raw_input("Digite o curso: ")
+        inst = raw_input("Digite a insituicao: ")
 
-    statement = 'INSERT INTO FORMANDO(CPF, CURSO, INSTITUICAO) \
-                 VALUES(:CPF, :curso, :inst)'
-    cursor.execute(statement, {'curso': curso, 'inst': inst, 'CPF': CPF})
+        statement = 'INSERT INTO FORMANDO(CPF, CURSO, INSTITUICAO) \
+                     VALUES(:CPF, :curso, :inst)'
+        try:
+            cursor.execute(statement, {'curso': curso, 'inst': inst, 'CPF': CPF})
+            break
+        except cx_Oracle.IntegrityError:
+            print("Erro de restricao.")
+            print("Possiveis erros: ")
+            print("\t- Cargo ou Endereco muito longo")
+            print("\t- Carteira de trabalho invalida")
+            print("\t- Servicp invalido invalido")
+        except cx_Oracle.Error:
+            print(cx_Oracle.Error.message)
 
     cursor.close()
 
@@ -100,37 +142,62 @@ def inserirFormando(CPF):
             nome = inserirComissao()
             inserirForma(CPF, nome)
         elif(c == 2):
-            nome = raw_input("Digite o nome da comissao: ")
-            inserirForma(CPF, nome)
+            aux = False
+            while(not aux):
+                nome = raw_input("Digite o nome da comissao: ")
+                aux = inserirForma(CPF, nome)
 
 
 def inserirFuncionario(CPF):
     cursor = connection.cursor()
     
-    cargo = raw_input("Digite o cargo: ")
-    end = raw_input("Digite o endereco: ")
-    ct = raw_input("Digite o numero da carteira de trabalho: ")
-    salario = raw_input("Digite o salario: ")
-    ord_serv = raw_input("Digite a ordem de servico: ")
+    while(True):
+        cargo = raw_input("Digite o cargo: ")
+        end = raw_input("Digite o endereco: ")
+        ct = raw_input("Digite o numero da carteira de trabalho: ")
+        salario = raw_input("Digite o salario: ")
+        ord_serv = raw_input("Digite a ordem de servico: ")
 
-    statement = 'INSERT INTO FUNCIONARIO(CPF, CARGO, ENDERECO, CT, SALARIO, ORDEM_SERVICO) \
-                 VALUES(:CPF, :cargo, :end, :ct, :salario, :ord_serv)'
-    cursor.execute(statement, {'CPF': CPF, 'cargo':cargo, 'end':end, 'ct':ct, 'salario':salario, 'ord_serv':ord_serv})
-    
+        statement = 'INSERT INTO FUNCIONARIO(CPF, CARGO, ENDERECO, CT, SALARIO, ORDEM_SERVICO) \
+                     VALUES(:CPF, :cargo, :end, :ct, :salario, :ord_serv)'
+        
+        try:
+            cursor.execute(statement, {'CPF': CPF, 'cargo':cargo, 'end':end, 'ct':ct, 'salario':salario, 'ord_serv':ord_serv})
+            break
+        except cx_Oracle.IntegrityError:
+            print("Erro de restricao.")
+            print("Possiveis erros: ")
+            print("\t- Cargo ou Endereco muito longo")
+            print("\t- Carteira de trabalho invalida")
+            print("\t- Servic invalido invalido")
+        except cx_Oracle.Error:
+            print(cx_Oracle.Error.message)
+
     cursor.close()
 
 
 def inserirPessoa():
     cursor = connection.cursor()
 
-    CPF = raw_input("Insira o CPF (xxx.xxx.xxx-xx): ")
-    nome = raw_input("Insira o nome: ")
-    tipo = raw_input("Insira o tipo (Noivo, Formando ou Funcionario): ")
+    while(True):
+        CPF = raw_input("Insira o CPF (xxx.xxx.xxx-xx): ")
+        nome = raw_input("Insira o nome: ")
+        tipo = raw_input("Insira o tipo (Noivo, Formando ou Funcionario): ")
 
-    statement = 'INSERT INTO PESSOA(CPF, NOME, TIPO) \
-                 VALUES(:CPF, :nome, :tipo)'
-    cursor.execute(statement, {'CPF': CPF, 'nome': nome, 'tipo': tipo})
-
+        statement = 'INSERT INTO PESSOA(CPF, NOME, TIPO) \
+                     VALUES(:CPF, :nome, :tipo)'
+        try:
+            cursor.execute(statement, {'CPF': CPF, 'nome': nome, 'tipo': tipo})
+            break
+        except cx_Oracle.IntegrityError:
+            print("Erro de restricao.")
+            print("Possiveis erros: ")
+            print("\t- CPF ivalido")
+            print("\t- Nome muito longo")
+            print("\t- Tipo incorreto")
+        except cx_Oracle.Error:
+            print(cx_Oracle.Error.message)
+    
     cursor.close()
 
     if(tipo.upper() == 'NOIVO'):
@@ -139,6 +206,8 @@ def inserirPessoa():
         inserirFormando(CPF)
     elif(tipo.upper() == 'FUNCIONARIO'):
         inserirFuncionario(CPF)
+    
+    return CPF
 
 
 def main():
