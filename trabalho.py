@@ -9,7 +9,7 @@ def menu():
         #limpa a tela toda vez que entrar no menu
         os.system('clear')
         #mostra as opcoes disponiveis
-        print('[MENU INICIAL] Selecione uma opcao:')
+        print('[MENU INICIAL] Selecione o numero da opcao desejada:')
         print('1) Gerenciar Pessoa') # CRUD de pessoas (clientes e funcionarios)
         print('2) Gerenciar Eventos') # CRUD e todo o processo de cadastro de eventos
         print('3) Gerenciar Locais') # CRUD de Locais
@@ -286,7 +286,6 @@ def updatePessoa():
     elif(response.upper() == 'FUNCIONARIO'):
         print(response)
 
-########################################################################
 
 def main():
     menu()
