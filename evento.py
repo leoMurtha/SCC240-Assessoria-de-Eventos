@@ -15,9 +15,9 @@ def inserirEvento(tipo):
         tema = readAttribute('tema')
         descricao = readAttribute('descricao')
         data = readNotNullAttribute('data (yyyy/mm/dd)')
-        locais = selecionarLocal(data)
+        locais = selecionarLocalData(data)
         
-        printLocais(locais)
+        printLocais(locais,'Nome, Locacao e Aluguel')
         local = locais[int(input('Digite o numero do local escolhido: '))][0]
         
         
@@ -56,13 +56,9 @@ def acharComissao(nome):
         print(cx_Oracle.Error.message)
         cursor.close()
         return True
-    
-    
+      
 def inserirFormatura(comissao, festa, colacao):
     cursor = connection.cursor()
-    print('a')
-    print(comissao, festa, colacao)
-    print('b')
     statament_formatura = "INSERT INTO FORMATURA (COMISSAO, FESTA, COLACAO)\
                 VALUES(:comissao, :festa, :colacao)"
 
@@ -71,6 +67,7 @@ def inserirFormatura(comissao, festa, colacao):
         cursor.execute(statament_formatura, {'comissao': comissao, 'festa': festa, 'colacao': colacao})    
         cursor.close()
         connection.commit()
+        print('Formatura Inserida...')
     except (cx_Oracle.IntegrityError):
         print(cx_Oracle.IntegrityError.message)
         print('Erro de restricao, possiveis erros:\n-Comissao invalida\n-Festa invalida')
@@ -106,8 +103,10 @@ def consultarPorComissao():
         comissao = raw_input('Formatura nao foi encontrada, digite novamente: ')
     
     cursor = connection.cursor()
-    statement = "SELECT F.FESTA, F.COLACAO FROM FORMATURA F\
-                    WHERE F.COMISSAO = UPPER(:comissao)"
+    statement = "SELECT E1.TEMA, E1.DESCRICAO, E1.DATA, E2.TEMA, E2.DESCRICAO, E2.DATA FROM FORMATURA F\
+                    INNER JOIN EVENTO E1 ON E1.NRO = F.FESTA\
+                    LEFT JOIN EVENTO E2 ON E2.NRO = F.COLACAO\
+                    WHERE UPPER(F.COMISSAO) = UPPER(:comissao)"
     try:
         cursor.execute(statement, {'comissao': comissao})
         responses = cursor.fetchall()
@@ -116,7 +115,7 @@ def consultarPorComissao():
             print(res)
 
     except (cx_Oracle.IntegrityError):
-        print('Erro de restricao: Valores inseridos invalidos')
+        print('Erro de restricao')
     except cx_Oracle.Error:
         print(cx_Oracle.Error.message)
 
@@ -148,6 +147,28 @@ def consultarPorLocal():
     cursor.close()
 
     raw_input('Pressione enter para voltar')
+
+def consultarPorData():
+    data = readNotNullAttribute('data (yyyy/mm/dd)')
+
+    cursor = connection.cursor()
+    statement = "SELECT E1.TEMA, E1.DESCRICAO, E1.DATA FROM FORMATURA F\
+                    INNER JOIN EVENTO E1 ON E1.NRO = F.FESTA\
+                    WHERE E1.DATA = TO_DATE(:data, 'yyyy/mm/dd')"
+    try:
+        cursor.execute(statement, {'data': data})
+        responses = cursor.fetchall()
+    
+        print('Formaturas na data : ' + data)
+        for res in responses:
+            print(res)
+
+    except cx_Oracle.Error:
+        print(cx_Oracle.Error)
+
+    cursor.close()
+
+    raw_input('Pressione enter para voltar')
         
 def consultasFormatura():
     os.system('clear')
@@ -164,27 +185,26 @@ def consultasFormatura():
     elif(opcao == 2):
         consultarPorLocal()
     elif(opcao == 3):
-        pass
-        #consultarPorData()
-    
+        consultarPorData()
+
 def gerenciarEvento():
-    os.system('clear')
-    #mostra as opcoes disponiveis
-    print('[MENU DE EVENTOS] Selecione o numero da opcao de desejada:')
-    print('1) Cadastrar formatura') # Inserts
-    print('2) Consultas formatura') # Selects
-    print('3) Alterar formatura') # Updates
-    print('4) Remover formatura') # Removes
-    print('5) Voltar')
-    opcaoE = input()
-    
-    os.system('clear')
+    exitL = False
+    while(not exitL):
+        os.system('clear')
+        #mostra as opcoes disponiveis
+        print('[MENU DE EVENTOS] Selecione o numero da opcao de desejada:')
+        print('1) Cadastrar formatura') # Inserts
+        print('2) Consultas formatura') # Selects
+        print('3) Voltar')
+        opcaoE = input()
+        
+        os.system('clear')
 
-    if(opcaoE == 1):
-        cadastrarFormatura()
-
-    elif(opcaoE == 2):
-        consultasFormatura()
-
-    else:
-        print('Opcao invalida. Selecione uma nova opcao.')
+        if(opcaoE == 1):
+            cadastrarFormatura()
+        elif(opcaoE == 2):
+            consultasFormatura()
+        elif(opcaoE == 3):
+            exitL = True
+        else:
+            print('Opcao invalida. Selecione uma nova opcao.')
