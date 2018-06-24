@@ -395,11 +395,62 @@ def deletePessoa():
     cursor.close()
 
 
-"""
-    - Select somente a PESSOA
-    - Select JOIN com o TIPO dela
-    - 
-"""
+def searchFuncionario(CPF):
+    cursor = connection.cursor()
+    
+    print("A pessoa buscada é um FUNCIONARIO, segue as informacoes: ")
+
+    statement = 'SELECT CPF, NOME, CARGO, ENDERECO, CT, SALARIO, SERVICO  \
+                 FROM PESSOA \
+                 NATURAL JOIN FUNCIONARIO \
+                 WHERE CPF = :CPF'
+
+    cursor.execute(statement, {'CPF':CPF})
+    response = cursor.fetchall()
+
+    for i in response:
+        print i
+
+    cursor.close()
+
+
+def searchFormando(CPF):
+    cursor = connection.cursor()
+    
+    print("A pessoa buscada é um FORMANDO, segue as informacoes: ")
+
+    statement = 'SELECT CPF, NOME, CURSO, INSTITUICAO \
+                 FROM PESSOA \
+                 NATURAL JOIN FORMANDO \
+                 WHERE CPF = :CPF'
+
+    cursor.execute(statement, {'CPF':CPF})
+    response = cursor.fetchall()
+
+    for i in response:
+        print i
+
+    cursor.close()
+
+
+def serachNoivo(CPF):
+    cursor = connection.cursor()
+    
+    print("A pessoa buscada é um NOIVO, segue as informacoes: ")
+
+    statement = 'SELECT CPF, NOME, TELEFONE \
+                 FROM PESSOA \
+                 NATURAL JOIN NOIVO \
+                 WHERE CPF = :CPF'
+
+    cursor.execute(statement, {'CPF':CPF})
+    response = cursor.fetchall()
+
+    for i in response:
+        print i
+
+    cursor.close()
+
 def searchPessoa():
     cursor = connection.cursor()
 
@@ -418,14 +469,15 @@ def searchPessoa():
         except cx_Oracle.Error:
                 print(cx_Oracle.Error.message)
 
-    if(response.upper() == 'NOIVO'):
-        updateNoivo(CPF)
-    elif(response.upper() == 'FORMANDO'):
-        updateFormando(CPF)
-    elif(response.upper() == 'FUNCIONARIO'):
-        updateFuncionario(CPF)
-
     cursor.close()
+
+    if(response.upper() == 'NOIVO'):
+        serachNoivo(CPF)
+    elif(response.upper() == 'FORMANDO'):
+        searchFormando(CPF)
+    elif(response.upper() == 'FUNCIONARIO'):
+        searchFuncionario(CPF)
+
 
 def gerenciarPessoas():
     print('[GERENCIADOR DE PESSOAS] Selecione o numero da opcao desejada:')
