@@ -24,9 +24,11 @@ def gerenciarLocal():
     os.system('clear')
     #mostra as opcoes disponiveis
     print('[MENU DE LOCAIS] Selecione o numero da opcao de desejada:')
-    print('1) Cadastrar novo local') # CRUD de pessoas (clientes e funcionarios)
-    print('2) Consultar e Alterar locais cadastrados') # Select, update, remove
-    print('3) Voltar')
+    print('1) Cadastrar novo local') # Inserts
+    print('2) Consultar locais cadastrados') # Selects
+    print('3) Alterar locais cadastrados') # Updates
+    print('4) Remover locais cadastrados') # Removes
+    print('5) Voltar')
     opcaoL = input()
     
     os.system('clear')
@@ -35,10 +37,7 @@ def gerenciarLocal():
         cadastrarLocal()
 
     elif(opcaoL == 2):
-        menu()
-
-    elif(opcaoL == 3):
-        menu()   
+        consultasLocal()
 
     else:
         print('Opcao invalida. Selecione uma nova opcao.')      
@@ -84,3 +83,37 @@ def inserirLocal(nomeFantasia,area,lotacao,aluguel,endereco,telefone,nomeProprie
     cursor.close()
     return True    
 
+def consultasLocal():
+    os.system('clear')
+    print('[CONSULTAS DE LOCAIS] Selecione o numero da opcao de desejada:')
+    print('1)Consultar local por nome') 
+    print('2)Consultar locais por aluguel') 
+    print('3)Consultar locais por lotacao')
+    print('4)Consultar locais por aluguel e lotacao') 
+    print('5)Consultar locais disponiveis em uma data') 
+    print('6) Voltar')
+    opcao = input()
+    os.system('clear')
+
+    if(opcao == 1):
+        consultarLocal()
+    elif(opcao == 2):
+        ConsultarAluguel()
+    elif(opcao == 3):
+        ConsultarLotacao()
+    elif(opcao == 4):
+        ConsultarAluguelLotacao()
+    elif(opcao == 5):
+        ConsultarDisponiveis()
+
+
+def ConsultarLocal:
+
+def ConsultarAluguel:
+
+def ConsultarLotacao:
+
+def ConsultarAluguelLotacao:
+
+def ConsultarDisponiveis:
+ 
