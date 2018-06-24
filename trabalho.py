@@ -209,6 +209,84 @@ def inserirPessoa():
     
     return CPF
 
+def updateNoivo(CPF):
+    cursor = connection.cursor()
+
+    resp = raw_input("Deseja alterar o telefone? (Se sim, digite: S)")
+    if(resp.upper() == 'S'):
+
+        while(True):
+            tel = raw_input("Digite o novo telefone: ")
+
+            statement = 'UPDATE NOIVO \
+                         SET TELEFONE = :tel \
+                         WHERE CPF = :CPF'
+
+            try:
+                cursor.execute(statement, {'tel':tel, 'CPF':CPF})
+                break
+            except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- Telefone invalido")
+            except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+        
+    cursor.close()
+
+
+def updatePessoa():
+    cursor = connection.cursor()
+    
+    while(True):
+        CPF = raw_input("Digite o CPF a ser modificado: ")
+        statement = 'SELECT * \
+                     FROM PESSOA \
+                     WHERE CPF = :CPF'
+        try:
+            cursor.execute(statement, {'cpf': CPF})
+            break
+        except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- CPF invalido")
+        except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+
+    resp = raw_input("Deseja alterar o nome? (Se sim, digite: S)")
+    if(resp.upper() == 'S'):
+
+        while(True):
+            nome = raw_input("Digite o novo nome: ")
+
+            statement = 'UPDATE PESSOA \
+                         SET NOME = :nome \
+                         WHERE CPF = :CPF'
+
+            try:
+                cursor.execute(statement, {'nome':nome, 'CPF':CPF})
+                break
+            except cx_Oracle.IntegrityError:
+                print("Erro de restricao.")
+                print("Possiveis erros: ")
+                print("\t- Nome muito longo")
+            except cx_Oracle.Error:
+                print(cx_Oracle.Error.message)
+
+    statement = 'SELECT TIPO FROM PESSOA WHERE CPF = :CPF'
+    cursor.execute(statement, {'CPF', CPF})
+    response = cursor.fetchone()[0]
+    
+    cursor.close()
+    
+    if(response.upper() == 'NOIVO'):
+        updatePessoa()
+    elif(response.upper() == 'FORMANDO'):
+        print(response)
+    elif(response.upper() == 'FUNCIONARIO'):
+        print(response)
+
+
 
 def main():
     inserirPessoa()
