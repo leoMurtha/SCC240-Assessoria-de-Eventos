@@ -11,8 +11,9 @@ def consultasLocal():
         print('3)Consultar locais por aluguel') 
         print('4)Consultar locais por lotacao')
         print('5)Consultar locais por aluguel e lotacao') 
-        print('6)Consultar locais disponiveis em uma data') 
-        print('7) Voltar')
+        print('6)Consultar locais disponiveis em uma data')
+        print('7)Consultar estatisticas de local') 
+        print('8) Voltar')
         opcao = input()
         os.system('clear')
 
@@ -29,6 +30,8 @@ def consultasLocal():
         elif(opcao == 6):
             consultarDisponiveis()
         elif(opcao == 7):
+            estatisticasLocal()
+        elif(opcao == 8):
             exitL = True
 
 def consultarLocal():
@@ -71,6 +74,22 @@ def consultarDisponiveis():
     data = readAttribute('data a ser consultada')
     locais = selecionarLocalData(data)
     printLocais(locais,'Nome, Locacao e Aluguel')
+    print('Finalizar consulta:')
+    raw_input()
+
+def estatisticasLocal():
+    nro = selectNroLocais()
+    print('Nro de locais: ')
+    print(nro[0])
+    media = selectAluguelMedia()
+    print('Media de Aluguel: ')
+    print(media[0])
+    max= selectAluguelMax()
+    print('Maximo de Aluguel: ')
+    print(max[0])
+    min = selectAluguelMin()
+    print('Minimo de Aluguel: ')
+    print(min[0])
     print('Finalizar consulta:')
     raw_input()
 
@@ -187,6 +206,66 @@ def selecionarLocalData(data):
         print(cx_Oracle.Error.message)
 
     cursor.close()
+    return responses
+
+def selectAluguelMedia():
+    cursor = connection.cursor()
+    statement = "SELECT AVG(ALUGUEL) FROM LOCAL"
+    try:
+        cursor.execute(statement)
+        responses = cursor.fetchall()
+    except (cx_Oracle.IntegrityError):
+        print('Erro de restricao')
+    except cx_Oracle.Error:
+        print(cx_Oracle.Error.message)
+
+    cursor.close()
+
+    return responses
+
+def selectAluguelMax():
+    cursor = connection.cursor()
+    statement = "SELECT MAX(ALUGUEL) FROM LOCAL"
+    try:
+        cursor.execute(statement)
+        responses = cursor.fetchall()
+    except (cx_Oracle.IntegrityError):
+        print('Erro de restricao')
+    except cx_Oracle.Error:
+        print(cx_Oracle.Error.message)
+
+    cursor.close()
+
+    return responses
+
+def selectAluguelMin():
+    cursor = connection.cursor()
+    statement = "SELECT MIN(ALUGUEL) FROM LOCAL"
+    try:
+        cursor.execute(statement)
+        responses = cursor.fetchall()
+    except (cx_Oracle.IntegrityError):
+        print('Erro de restricao')
+    except cx_Oracle.Error:
+        print(cx_Oracle.Error.message)
+
+    cursor.close()
+
+    return responses
+
+def selectNroLocais():
+    cursor = connection.cursor()
+    statement = "SELECT COUNT(NFANTASIA) FROM LOCAL"
+    try:
+        cursor.execute(statement)
+        responses = cursor.fetchall()
+    except (cx_Oracle.IntegrityError):
+        print('Erro de restricao')
+    except cx_Oracle.Error:
+        print(cx_Oracle.Error.message)
+
+    cursor.close()
+
     return responses
 
 def printLocais(local, atributos):
