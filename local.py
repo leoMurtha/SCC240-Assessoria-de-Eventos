@@ -22,29 +22,6 @@ def gerenciarLocal():
     else:
         print('Opcao invalida. Selecione uma nova opcao.')      
 
-def selecionarLocal(data):
-    """
-        Retorna o local escolhido de acordo com locais disponiveis na data
-    """
-    cursor = connection.cursor()
-    statement = "SELECT L.NFANTASIA, L.ALUGUEL, L.AREA FROM LOCAL L\
-                    WHERE L.NFANTASIA NOT IN\
-                    (SELECT L.NFANTASIA FROM LOCAL L\
-                    INNER JOIN EVENTO E ON E.LOCAL = L.NFANTASIA\
-                    WHERE E.DATA = to_date(:data, 'yyyy/mm/dd'))"
-    cursor.execute(statement, {'data': data})
-    responses = cursor.fetchall()
-    print('Locais disponiveis')
-    print('Nome, Locao e Aluguel')
-    for res in responses:
-        print(res)
-    
-    local = raw_input('Selecione o local\n')
-    print(local)
-    cursor.close()
-
-    return local
-
 def cadastrarLocal():
         os.system('clear')
         #mostra as opcoes disponiveis
@@ -61,6 +38,7 @@ def cadastrarLocal():
 
         # insercao no banco de dados
         inserirLocal(nFant,area,lot,alug,end,tel,nProp)
+        connection.commit()
 
         print("Local Cadastrado com Sucesso!")
 
@@ -122,5 +100,37 @@ def consultarAluguelLotacao():
     print('Insira o nome do lugar a ser consultado:')
 
 def consultarDisponiveis():
-    print('Insira o nome do lugar a ser consultado:')
+    print('Insira a data a ser consultada:')
+    data = raw_input()
+    locais = selecionarLocal(data = data)
+    printLocais(locais)
+    print('Finalizar consulta:')
+    raw_input()
  
+def selecionarLocal(data):
+    """
+        Retorna o local escolhido de acordo com locais disponiveis na data
+    """
+    cursor = connection.cursor()
+    statement = "SELECT L.NFANTASIA, L.ALUGUEL, L.AREA FROM LOCAL L\
+                    WHERE L.NFANTASIA NOT IN\
+                    (SELECT L.NFANTASIA FROM LOCAL L\
+                    INNER JOIN EVENTO E ON E.LOCAL = L.NFANTASIA\
+                    WHERE E.DATA = to_date(:data, 'yyyy/mm/dd'))"
+    try:
+        cursor.execute(statement, {'data': data})
+        responses = cursor.fetchall()
+    except (cx_Oracle.IntegrityError):
+        print('Erro de restricao: Valores inseridos invalidos')
+    except cx_Oracle.Error:
+        print(cx_Oracle.Error.message)
+
+    cursor.close()
+
+    return responses
+
+def printLocais(local):
+    print('Locais disponiveis')
+    print('Nome, Locacao e Aluguel')
+    for i in xrange(len(local)):
+        print("{}) {}".format(i,local[i]))
