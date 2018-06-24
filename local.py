@@ -98,26 +98,26 @@ def consultasLocal():
     if(opcao == 1):
         consultarLocal()
     elif(opcao == 2):
-        ConsultarAluguel()
+        consultarAluguel()
     elif(opcao == 3):
-        ConsultarLotacao()
+        consultarLotacao()
     elif(opcao == 4):
-        ConsultarAluguelLotacao()
+        consultarAluguelLotacao()
     elif(opcao == 5):
-        ConsultarDisponiveis()
+        consultarDisponiveis()
 
 
-def ConsultarLocal():
+def consultarLocal():
     print('Insira o nome do lugar a ser consultado:')
-def ConsultarAluguel():
-    print('Insira o nome do lugar a ser consultado:')
-
-def ConsultarLotacao():
+def consultarAluguel():
     print('Insira o nome do lugar a ser consultado:')
 
-def ConsultarAluguelLotacao():
+def consultarLotacao():
     print('Insira o nome do lugar a ser consultado:')
 
-def ConsultarDisponiveis():
+def consultarAluguelLotacao():
+    print('Insira o nome do lugar a ser consultado:')
+
+def consultarDisponiveis():
     print('Insira o nome do lugar a ser consultado:')
  
