@@ -46,21 +46,20 @@ def selecionarLocal(data):
         Retorna o local escolhido de acordo com locais disponiveis na data
     """
     cursor = connection.cursor()
-    print(data)
-    statement = "SELECT L2.NFANTASIA,L2.LOTACAO,L2.ALUGUEL\
-                        FROM LOCAL L2 \
-                        JOIN EVENTO E\
-                        ON E.LOCAL = L2.NFANTASIA\
-                        WHERE E.DATA = TO_DATE('2019/02/20', 'yyyy/mm/dd')"
-    cursor.execute(statement)
+    statement = "SELECT L.NFANTASIA, L.ALUGUEL, L.AREA FROM LOCAL L\
+                    WHERE L.NFANTASIA NOT IN\
+                    (SELECT L.NFANTASIA FROM LOCAL L\
+                    INNER JOIN EVENTO E ON E.LOCAL = L.NFANTASIA\
+                    WHERE E.DATA = to_date(:data, 'yyyy/mm/dd'))"
+    cursor.execute(statement, {'data': data})
     responses = cursor.fetchall()
     print('Locais disponiveis')
     print('Nome, Locao e Aluguel')
     for res in responses:
         print(res)
     
-    local = raw_input('Selecione o local')
-
+    local = raw_input('Selecione o local\n')
+    print(local)
     cursor.close()
 
     return local
@@ -69,6 +68,7 @@ def inserirColacao():
     while True:
         print('Insira informacoes a respeito da colacao')
         nro = _NRO
+        _NRO = _NRO + 1
         print(nro)
         tema = raw_input('Insira o tema:\n')
         descricao = raw_input('Insira a descricao:\n')
@@ -81,7 +81,10 @@ def inserirColacao():
                     VALUES(:nro, :tema, to_date(:data, 'yyyy/mm/dd'), :descricao, :local, :tipo)"
         
         try:
+            cursor = connection.cursor()
             cursor.execute(statament_colacao, {'nro':nro, 'tema':tema, 'data':data, 'descricao':descricao, 'local':local, 'tipo':tipo})    
+            cursor.close()
+            connection.commit()
             break
         except (cx_Oracle.IntegrityError):
             print('Erro de restricao: con')
@@ -104,7 +107,10 @@ def inserirFestaFormatura():
                     VALUES(:nro, :tema, to_date(:data, 'yyyy/mm/dd'), :descricao, :local, :tipo)"
 
         try:
+            cursor = connection.cursor()
             cursor.execute(statament_formatura, {'nro':nro, 'tema':tema, 'data':data, 'descricao':descricao, 'local':local, 'tipo':tipo})    
+            cursor.close()
+            connection.commit()
             break
         except (cx_Oracle.IntegrityError):
             print('Nro de evento ja existe ou local nao existe')
@@ -124,7 +130,6 @@ def cadastrarEvento():
             
 
         raw_input('Pressione enter para voltar ao menu')
-        connection.commit()
             
     cursor.close()
 
@@ -157,5 +162,5 @@ if __name__ == '__main__':
     cursor = connection.cursor()
     cursor.execute('select COUNT(NRO) from EVENTO')
     _NRO = cursor.fetchone()[0] + 1
-     
+    cursor.close()
     main()

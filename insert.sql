@@ -4,13 +4,16 @@ INSERT INTO LOCAL(NFANTASIA, AREA, LOTACAO, ALUGUEL, ENDERECO, TELEFONE, NPROPRI
 INSERT INTO LOCAL(NFANTASIA, AREA, LOTACAO, ALUGUEL, ENDERECO, TELEFONE, NPROPRIETARIO)
     VALUES('Buffet Demácia', 300, 200, 15.000, 'Rua das flores, SP, 140', '(11)32244000', 'Leonardo Teemo');
 
+INSERT INTO LOCAL(NFANTASIA, AREA, LOTACAO, ALUGUEL, ENDERECO, TELEFONE, NPROPRIETARIO)
+    VALUES('Espaco Clean', 200, 200, 200.000, 'Avenida Paulista, SP, 100', '(11)41128922', 'Teemo Nunes');
+
 ------------------------------------------------------------------------------------------------------
 
 INSERT INTO EVENTO(NRO, TEMA, DATA, DESCRICAO, LOCAL, TIPO)
-    VALUES(0010, 'Classico', to_date('2018/01/29 20:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'Casamento clássico', 'Buffet Andramar', 'Casamento');
+    VALUES(001, 'Classico', to_date('2018/01/01', 'yyyy/mm/dd'), 'Casamento classico', 'Buffet Andramar', 'Casamento');
 
 INSERT INTO EVENTO(NRO, TEMA, DATA, DESCRICAO, LOCAL, TIPO)
-    VALUES(0097, 'Anos 80', to_date('2019/02/20 19:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'Formatura oitentista', 'Buffet Demácia', 'Formatura');
+    VALUES(002, 'Anos 80', to_date('2019/01/01', 'yyyy/mm/dd'), 'Formatura oitentista', 'Buffet Demacia', 'Formatura');
 
 ------------------------------------------------------------------------------------------------------
 
