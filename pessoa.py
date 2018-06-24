@@ -481,32 +481,38 @@ def searchPessoa():
 
 
 def gerenciarPessoas():
-    print('[GERENCIADOR DE PESSOAS] Selecione o numero da opcao desejada:')
-    print('1) Cadastrar uma pessoa')
-    print('2) Atualizar dados de uma pessoa')
-    print('3) Remover uma pessoa')
-    print('4) Pesquisar uma pessoa')
+    exitP = True 
+    
+    while(exitP):
+        print('[GERENCIADOR DE PESSOAS] Selecione o numero da opcao desejada:')
+        print('1) Cadastrar uma pessoa')
+        print('2) Atualizar dados de uma pessoa')
+        print('3) Remover uma pessoa')
+        print('4) Pesquisar uma pessoa')
+        print('5) Voltar para o menu anterior')
 
-    pessoasAux = int(input())
+        pessoasAux = int(input())
 
-    if (pessoasAux == 1):
-        inserirPessoa()
-        connection.commit()
-        print("Cadastro completo!")
-        raw_input("Pressione qualquer tecla para continuar...")
-    elif (pessoasAux == 2):
-        updatePessoa()
-        connection.commit()
-        print("Atualizacao completa!")
-        raw_input("Pressione qualquer tecla para continuar...")
-    elif (pessoasAux == 3):
-        deletePessoa()
-        connection.commit()
-        print("Remocao completa!")
-        raw_input("Pressione qualquer tecla para continuar...")
-    elif (pessoasAux == 4):
-        searchPessoa()
-        print("Busca completa!")
-        raw_input("Pressione qualquer tecla para continuar...")
-    else:
-        print("Opcao Invalida")
+        if (pessoasAux == 1):
+            inserirPessoa()
+            connection.commit()
+            print("Cadastro completo!")
+            raw_input("Pressione qualquer tecla para continuar...")
+        elif (pessoasAux == 2):
+            updatePessoa()
+            connection.commit()
+            print("Atualizacao completa!")
+            raw_input("Pressione qualquer tecla para continuar...")
+        elif (pessoasAux == 3):
+            deletePessoa()
+            connection.commit()
+            print("Remocao completa!")
+            raw_input("Pressione qualquer tecla para continuar...")
+        elif (pessoasAux == 4):
+            searchPessoa()
+            print("Busca completa!")
+            raw_input("Pressione qualquer tecla para continuar...")
+        elif (pessoasAux == 5):
+            exitP = False
+        else:
+            print("Opcao Invalida")
