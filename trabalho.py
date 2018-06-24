@@ -68,7 +68,6 @@ def inserirColacao():
     while True:
         print('Insira informacoes a respeito da colacao')
         nro = _NRO
-        _NRO = _NRO + 1
         print(nro)
         tema = raw_input('Insira o tema:\n')
         descricao = raw_input('Insira a descricao:\n')
